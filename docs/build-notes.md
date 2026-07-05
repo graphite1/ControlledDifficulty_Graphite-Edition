@@ -12,6 +12,19 @@ Reason: KF2 SDK の `KFEditor.exe` が未確認のため、Blackout Edition / Gr
 
 Codex 側で Steam、KF2 本体、SDK フォルダに対する編集、移動、削除、設定変更、インストール操作は行わない。外部環境に対して行う操作は、確認・参照・パス確認までに限定する。
 
+この blocked 状態は、ユーザーが SDK パスと `KFEditor.exe` の存在を確認するまで継続する。
+
+現在の作業ブランチ:
+
+`docs/sdk-build-notes`
+
+このブランチの目的:
+
+- SDK / `KFEditor.exe` 確認前後の手順を整理する。
+- ビルド blocked 状態を明確にする。
+- SDK パス共有後にすぐ確認へ進めるようにする。
+- 作業フォルダ外部へ書き込まない運用を明文化する。
+
 ユーザー側で確認する候補:
 
 - Steam Library > Tools から `Killing Floor 2 - SDK` がインストール可能か確認する。
@@ -20,6 +33,26 @@ Codex 側で Steam、KF2 本体、SDK フォルダに対する編集、移動、
 - 候補パス: `Steam/steamapps/common/Killing Floor 2 SDK/`
 - 候補実行ファイル: `Binaries/Win64/KFEditor.exe`
 - 候補実行ファイル: `Binaries/Win32/KFEditor.exe`
+
+ユーザーに共有してほしい情報:
+
+- SDK root の絶対パス。
+- `KFEditor.exe` の絶対パス。
+- Steam Library 上での表示名。
+- `KFEditor.exe` が `Binaries/Win64` と `Binaries/Win32` のどちらにあるか。
+
+Codex 側で行ってよいこと:
+
+- ユーザーが共有したパス文字列を docs に記録する。
+- 作業フォルダ内でビルド用メモや設定テンプレートを作る。
+- 外部パスに対して存在確認や読み取り確認を行う。
+
+Codex 側で行わないこと:
+
+- Steam から SDK をインストールする。
+- Steam / KF2 / SDK フォルダへファイルをコピーする。
+- KF2 / SDK 側の ini、Script、BrewedPC、Unpublished などを編集する。
+- 外部フォルダへ `local_paths.mk`、成果物、ログ、設定ファイルを生成する。
 
 ## 現状
 
@@ -88,12 +121,40 @@ SteamDB 上では SDK AppID は `232150`、Editor executable は `Binaries/Win64
 1. Steam の Tools から `Killing Floor 2 - SDK` がインストール済みか確認する。
 2. 未導入なら SDK をインストールする。
 3. `KFEditor.exe` が存在する SDK パスを確認する。
-4. `vendor/blackout-edition/local_paths.mk` をローカル専用で作成する。
-5. Cygwin/MSYS/Git Bash 環境で `make compile` を試す。
+4. ユーザーが SDK パスを共有する。
+5. Codex が作業フォルダ内の docs に SDK パスと確認結果を記録する。
+6. Graphite 用ビルド方式を作業フォルダ内だけで設計する。
+7. 外部書き込みが不要な範囲で、`ControlledDifficulty_Graphite` のコンパイル前提を確認する。
+
+## SDK パス判明後の確認手順
+
+SDK パスが共有されたら、まず以下だけを行う。
+
+1. 共有パスが作業フォルダ外部であることを明示する。
+2. そのパスに対する操作は存在確認、参照、読み取り確認までに限定する。
+3. `KFEditor.exe` の存在を確認する。
+4. `Binaries/Win64` または `Binaries/Win32` のどちらを使うべきか記録する。
+5. `src/ControlledDifficulty_Graphite` を package root として扱うビルド方針を整理する。
+6. 実際の compile 前に、出力先と生成物が作業フォルダ内に限定できるか確認する。
+
+確認時点で外部書き込みが必要だと判明した場合は、そこで停止し、ユーザーに明示確認を取る。
+
+## Graphite Edition ビルド前チェック
+
+ビルド開始前に確認すること:
+
+- branch が機能別ブランチであること。
+- `main` に直接実装していないこと。
+- `vendor/blackout-edition` と `vendor/combined-reference` に変更がないこと。
+- `src/ControlledDifficulty_Graphite/Classes` に旧 package 名 `ControlledDifficulty_Blackout` が残っていないこと。
+- `CD_Survival` の GameClass が `ControlledDifficulty_Graphite.CD_Survival` であること。
+- `graphite_basic` が `CD_SpawnCycleCatalog` に登録されていること。
+- ビルド成果物の出力先が外部フォルダにならないこと。
 
 ## 注意
 
 - `local_paths.mk` は Blackout Edition 側の `.gitignore` に含まれている。
 - このプロジェクト側でも `vendor/` は `.gitignore` 済み。
 - Workshop upload 系ターゲットは使わない。
-- コミット、プッシュ、PR 作成は行わない。
+- PR 作成はユーザーの明示指示があるまで行わない。
+- `main` に直接機能実装しない。以後は目的別ブランチで進める。

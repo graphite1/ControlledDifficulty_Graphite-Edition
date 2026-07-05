@@ -8,7 +8,20 @@ Graphite Edition 予定先:
 
 https://github.com/graphite1/ControlledDifficulty_Graphite-Edition.git
 
-現在: `git ls-remote` は成功するが refs は空。空リポジトリまたは初期ブランチ未作成として扱う。clone、push、PR 作成は行っていない。
+現在:
+
+- branch: `main`
+- remote: `https://github.com/graphite1/ControlledDifficulty_Graphite-Edition.git`
+- latest commit: `2c6508d Initial Graphite Edition scaffold`
+- local `main` と `origin/main` は同一。
+- `main` は初期スキャフォールドの安定点として扱う。
+- 今後の作業は目的別ブランチで行い、`main` に直接機能実装しない。
+
+現在の作業ブランチ:
+
+`docs/sdk-build-notes`
+
+PR 作成はユーザーの明示指示があるまで行わない。
 
 ## Current Blocker
 
@@ -23,18 +36,30 @@ https://github.com/graphite1/ControlledDifficulty_Graphite-Edition.git
 
 SDK 確認前に行う作業:
 
-1. Graphite 用 package コピーの内容を SDK 導入後にコンパイル確認する。
-2. `graphite_basic` SpawnCycle の構文と挙動を SDK 導入後に確認する。
-3. `!ot` を Graphite に最小追加する設計を作る。
-4. 武器禁止・パーク禁止の config 名と最小 hook 位置を設計する。
-5. Combined Edition 参照は `CD_ChatCommander`、`CD_PlayerController`、Trader、Perk/Weapon 制限周辺に限定する。
+1. SDK / `KFEditor.exe` 確認前後の手順を docs に整理する。
+2. Graphite 用 package コピーのビルド前チェック項目を整理する。
+3. `graphite_basic` SpawnCycle の確認項目を整理する。
+4. `!ot` を Graphite に最小追加する設計を作る。
+5. 武器禁止・パーク禁止の config 名と最小 hook 位置を設計する。
+6. Combined Edition 参照は `CD_ChatCommander`、`CD_PlayerController`、Trader、Perk/Weapon 制限周辺に限定する。
 
 SDK 確認後に行う作業:
 
 1. `local_paths.mk` のローカル設定方針を決める。
-2. Graphite Edition の無改造相当ビルドを試す。
-3. package / GameClass 名 `ControlledDifficulty_Graphite.CD_Survival` の動作を確認する。
-4. `!ot`、武器禁止、パーク禁止の順に最小実装へ進む。
+2. 外部フォルダへ書き込まずに済むビルド手順を確定する。
+3. Graphite Edition の無改造相当ビルドを試す。
+4. package / GameClass 名 `ControlledDifficulty_Graphite.CD_Survival` の動作を確認する。
+5. `graphite_basic` の SpawnCycle 登録と parse を確認する。
+6. `!ot`、武器禁止、パーク禁止の順に最小実装へ進む。
+
+## Implementation Branch Policy
+
+- `main` は `2c6508d Initial Graphite Edition scaffold` を初期スキャフォールドとして扱う。
+- docs 整理は `docs/*` ブランチで行う。
+- `!ot` 実装は別ブランチで行う。候補: `feature/ot-command`。
+- 武器禁止は別ブランチで行う。候補: `feature/weapon-bans`。
+- パーク禁止は別ブランチで行う。候補: `feature/perk-bans`。
+- PR 作成はユーザーの明示指示があるまで行わない。
 
 ## Implementation Phase 1: Graphite package scaffold
 
@@ -115,11 +140,11 @@ Combined Edition は丸ごと取り込まない。次の周辺だけを参考実
 優先順:
 
 1. `!ot` の追加。
-2. 独自 SpawnCycle プリセットの追加。
-3. ini ベースの `BannedPerks` 追加。
-4. 禁止 Perk の検出と強制変更。
-5. ini ベースの `BannedWeapons` 追加。
-6. 禁止 Weapon の検出と削除/売却。
+2. ini ベースの `BannedWeapons` 追加。
+3. 禁止 Weapon の検出と削除/売却。
+4. ini ベースの `BannedPerks` 追加。
+5. 禁止 Perk の検出と強制変更。
+6. 独自 SpawnCycle の追加調整。
 7. 必要になった場合だけ Trader UI 非表示を検討。
 
 ## 禁止事項
@@ -127,4 +152,5 @@ Combined Edition は丸ごと取り込まない。次の周辺だけを参考実
 - ユーザー指示なしのコミット。
 - ユーザー指示なしのプッシュ。
 - ユーザー指示なしの PR 作成。
+- `main` への直接機能実装。
 - Combined Edition の統合 UI 系を丸ごと移植すること。
