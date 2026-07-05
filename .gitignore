@@ -1,0 +1,23 @@
+# Local/editor files
+.vs/
+.vscode/
+*.suo
+*.user
+*.tmp
+*.log
+
+# Local downloads and generated artifacts
+downloads/
+vendor/
+build/
+dist/
+out/
+tmp/
+
+# KF2 / UnrealScript generated packages
+*.u
+*.ucl
+
+# OS files
+Thumbs.db
+Desktop.ini

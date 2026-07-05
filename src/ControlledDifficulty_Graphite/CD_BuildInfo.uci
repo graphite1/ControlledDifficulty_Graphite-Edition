@@ -1,0 +1,5 @@
+`define CD_COMMIT_HASH "Controlled Difficulty: Graphite Edition"
+`define CD_AUTHOR_TIMESTAMP "2026-07-05"
+`define CD_AUTHOR "Graphite Edition development"
+`define CD_BUILD_TYPE "Graphite Edition"
+
