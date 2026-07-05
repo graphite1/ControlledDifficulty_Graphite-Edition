@@ -12,6 +12,20 @@ Graphite Edition 予定先:
 
 https://github.com/graphite1/ControlledDifficulty_Graphite-Edition.git
 
+現在の Git 状態:
+
+- branch: `main`
+- remote: `https://github.com/graphite1/ControlledDifficulty_Graphite-Edition.git`
+- latest commit: `2c6508d Initial Graphite Edition scaffold`
+- local `main` と `origin/main` は同一。
+
+運用方針:
+
+- `main` は初期スキャフォールドとして扱う。
+- 以後の作業は目的別ブランチで進める。
+- `main` に直接機能実装しない。
+- PR 作成はユーザーの明示指示があるまで行わない。
+
 主ベース:
 
 https://github.com/Treedestroyed/kf2-controlled-difficulty
